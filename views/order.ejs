@@ -1,0 +1,196 @@
+<%- include('layout/header', { title: 'Pesan Menu' }) %>
+
+<div class="py-5" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <h2 class="text-white mb-4"><i class="bi bi-basket me-2"></i>Menu Cafe</h2>
+
+                <% if (typeof success !== 'undefined' && success) { %>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i><%= success %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <% } %>
+                <% if (typeof error !== 'undefined' && error) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i><%= error %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <% } %>
+
+                <div class="card card-glass mb-4">
+                    <div class="card-header py-3" style="background: linear-gradient(135deg, rgba(17, 153, 142, 0.1) 0%, rgba(56, 239, 125, 0.1) 100%);">
+                        <h5 class="mb-0"><i class="bi bi-basket me-2" style="color: #11998e;"></i>Makanan</h5>
+                    </div>
+                    <div class="card-body">
+                        <% if (foods.length === 0) { %>
+                            <p class="text-muted text-center mb-0">Belum ada menu makanan</p>
+                        <% } else { %>
+                            <div class="row g-3">
+                                <% foods.forEach(food => { %>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center p-3 rounded-3 border" style="background: #f8f9fa;">
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1 fw-bold"><%= food.name %></h6>
+                                                <p class="mb-0 fw-bold" style="color: #11998e;">Rp <%= (food.price || 0).toLocaleString('id-ID') %></p>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick='decreaseQty(<%= food.id %>)'>
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
+                                                <span class="mx-2 fw-bold" id='qty-<%= food.id %>'>0</span>
+                                                <button type="button" class="btn btn-sm btn-success" onclick='increaseQty(<%= food.id %>, <%- JSON.stringify(food.name) %>, <%= food.price || 0 %>)'>
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="card card-glass">
+                    <div class="card-header py-3" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+                        <h5 class="mb-0"><i class="bi bi-cup-straw me-2" style="color: #667eea;"></i>Minuman</h5>
+                    </div>
+                    <div class="card-body">
+                        <% if (beverages.length === 0) { %>
+                            <p class="text-muted text-center mb-0">Belum ada menu minuman</p>
+                        <% } else { %>
+                            <div class="row g-3">
+                                <% beverages.forEach(bev => { %>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center p-3 rounded-3 border" style="background: #f8f9fa;">
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1 fw-bold"><%= bev.name %></h6>
+                                                <p class="mb-0 fw-bold" style="color: #667eea;">Rp <%= (bev.price || 0).toLocaleString('id-ID') %></p>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick='decreaseQty(<%= bev.id %>)'>
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
+                                                <span class="mx-2 fw-bold" id='qty-<%= bev.id %>'>0</span>
+                                                <button type="button" class="btn btn-sm btn-primary" onclick='increaseQty(<%= bev.id %>, <%- JSON.stringify(bev.name) %>, <%= bev.price || 0 %>)'>
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card card-glass sticky-top" style="top: 90px;">
+                    <div class="card-header py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <h5 class="mb-0 text-white"><i class="bi bi-cart3 me-2"></i>Keranjang</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="/order" method="POST" id="orderForm">
+                            <input type="hidden" name="items" id="itemsInput">
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-medium"><i class="bi bi-person me-1"></i> Nama (Opsional)</label>
+                                <input type="text" class="form-control" name="customerName" placeholder="Nama Anda">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-medium"><i class="bi bi-car-front me-1"></i> Nomor Plat <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg text-uppercase" name="policeNumber" 
+                                       placeholder="Contoh: B 1234 ABC" required style="font-weight: bold; letter-spacing: 2px;">
+                            </div>
+
+                            <hr>
+
+                            <div id="cartItems">
+                                <p class="text-muted text-center">Keranjang masih kosong</p>
+                            </div>
+
+                            <hr>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="fw-bold">Total:</span>
+                                <span class="fw-bold fs-4" id="cartTotal" style="color: #667eea;">Rp 0</span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 btn-lg" id="submitBtn" disabled>
+                                <i class="bi bi-check-circle me-2"></i>Pesan Sekarang
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let cart = {};
+
+function increaseQty(id, name, price) {
+    if (!cart[id]) {
+        cart[id] = { productId: id, name: name, price: price, qty: 0 };
+    }
+    cart[id].qty++;
+    document.getElementById('qty-' + id).textContent = cart[id].qty;
+    updateCart();
+}
+
+function decreaseQty(id) {
+    if (cart[id] && cart[id].qty > 0) {
+        cart[id].qty--;
+        if (cart[id].qty === 0) {
+            delete cart[id];
+        }
+        document.getElementById('qty-' + id).textContent = cart[id] ? cart[id].qty : 0;
+        updateCart();
+    }
+}
+
+function updateCart() {
+    const cartItemsDiv = document.getElementById('cartItems');
+    const cartTotalSpan = document.getElementById('cartTotal');
+    const itemsInput = document.getElementById('itemsInput');
+    const submitBtn = document.getElementById('submitBtn');
+
+    const items = Object.values(cart);
+    
+    if (items.length === 0) {
+        cartItemsDiv.innerHTML = '<p class="text-muted text-center">Keranjang masih kosong</p>';
+        cartTotalSpan.textContent = 'Rp 0';
+        submitBtn.disabled = true;
+        itemsInput.value = '';
+        return;
+    }
+
+    let html = '';
+    let total = 0;
+
+    items.forEach(item => {
+        const subtotal = item.price * item.qty;
+        total += subtotal;
+        html += `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                    <span class="fw-medium">${item.name}</span>
+                    <small class="text-muted d-block">Rp ${item.price.toLocaleString('id-ID')} x ${item.qty}</small>
+                </div>
+                <span class="fw-bold">Rp ${subtotal.toLocaleString('id-ID')}</span>
+            </div>
+        `;
+    });
+
+    cartItemsDiv.innerHTML = html;
+    cartTotalSpan.textContent = 'Rp ' + total.toLocaleString('id-ID');
+    submitBtn.disabled = false;
+    itemsInput.value = JSON.stringify(items.map(i => ({ productId: i.productId, qty: i.qty })));
+}
+</script>
+
+<%- include('layout/footer') %>

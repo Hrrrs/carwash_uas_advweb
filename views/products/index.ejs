@@ -1,0 +1,170 @@
+<%- include('../layout/header', { title: 'Kelola Produk' }) %>
+
+<div class="py-5" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh;">
+    <div class="container">
+        <!-- Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="text-white mb-1"><i class="bi bi-box-seam me-2"></i>Kelola Produk</h2>
+                <p class="text-white-50 mb-0">Kelola daftar layanan, makanan, dan minuman</p>
+            </div>
+            <div class="d-flex gap-2 mt-3 mt-md-0">
+                <a href="/products/add" class="btn btn-gradient">
+                    <i class="bi bi-plus-lg me-2"></i>Tambah Produk
+                </a>
+                <button onclick="printPage()" class="btn btn-outline-light">
+                    <i class="bi bi-printer me-2"></i>Print
+                </button>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <% if (success) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i><%= success %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+        <% if (error) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i><%= error %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <!-- Filter & Search Box -->
+        <div class="card card-glass mb-4 p-3">
+            <div class="row align-items-center g-3">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control border-start-0" id="searchInput" 
+                               placeholder="Cari produk..." onkeyup="filterProducts()">
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="btn-group w-100" role="group">
+                        <button type="button" class="btn btn-outline-light active" onclick="filterByCategory('all')" id="btn-all">
+                            <i class="bi bi-grid me-1"></i>Semua
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" onclick="filterByCategory('service')" id="btn-service">
+                            <i class="bi bi-car-front me-1"></i>Jasa
+                        </button>
+                        <button type="button" class="btn btn-outline-success" onclick="filterByCategory('food')" id="btn-food">
+                            <i class="bi bi-basket me-1"></i>Makanan
+                        </button>
+                        <button type="button" class="btn btn-outline-info" onclick="filterByCategory('beverage')" id="btn-beverage">
+                            <i class="bi bi-cup-straw me-1"></i>Minuman
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-2 text-md-end">
+                    <span class="text-muted">Total: <strong id="productCount"><%= products.length %></strong> produk</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Table -->
+        <div class="card card-glass">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" id="productsTable">
+                    <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <tr class="text-white">
+                            <th class="py-3 ps-4">#</th>
+                            <th class="py-3">Nama</th>
+                            <th class="py-3">Kategori</th>
+                            <th class="py-3">Harga</th>
+                            <th class="py-3">Deskripsi</th>
+                            <th class="py-3 text-center no-print">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (products.length === 0) { %>
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox display-4 d-block mb-3"></i>
+                                    Belum ada produk. <a href="/products/add">Tambah produk pertama</a>
+                                </td>
+                            </tr>
+                        <% } else { %>
+                            <% products.forEach((product, index) => { %>
+                                <tr data-category="<%= product.category %>">
+                                    <td class="ps-4"><%= index + 1 %></td>
+                                    <td class="fw-medium"><%= product.name %></td>
+                                    <td>
+                                        <% if (product.category === 'service') { %>
+                                            <span class="badge bg-primary"><i class="bi bi-car-front me-1"></i>Jasa</span>
+                                        <% } else if (product.category === 'food') { %>
+                                            <span class="badge bg-success"><i class="bi bi-basket me-1"></i>Makanan</span>
+                                        <% } else { %>
+                                            <span class="badge bg-info"><i class="bi bi-cup-straw me-1"></i>Minuman</span>
+                                        <% } %>
+                                    </td>
+                                    <td class="fw-bold">Rp <%= product.price.toLocaleString('id-ID') %></td>
+                                    <td class="text-muted"><%= product.description || '-' %></td>
+                                    <td class="text-center no-print">
+                                        <a href="/products/edit/<%= product.id %>" class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="/products/delete/<%= product.id %>" method="POST" class="d-inline" 
+                                              onsubmit="return confirmDelete('Hapus produk <%= product.name %>?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentCategory = 'all';
+
+function filterProducts() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const table = document.getElementById('productsTable');
+    const rows = table.querySelectorAll('tbody tr[data-category]');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+        const category = row.getAttribute('data-category');
+        const cells = row.getElementsByTagName('td');
+        let matchesSearch = false;
+        
+        for (let j = 0; j < cells.length; j++) {
+            if (cells[j].textContent.toLowerCase().includes(input)) {
+                matchesSearch = true;
+                break;
+            }
+        }
+        
+        const matchesCategory = currentCategory === 'all' || category === currentCategory;
+        const shouldShow = matchesSearch && matchesCategory;
+        
+        row.style.display = shouldShow ? '' : 'none';
+        if (shouldShow) visibleCount++;
+    });
+    
+    document.getElementById('productCount').textContent = visibleCount;
+}
+
+function filterByCategory(category) {
+    currentCategory = category;
+    
+    // Update button active states
+    document.querySelectorAll('.btn-group button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.getElementById('btn-' + category).classList.add('active');
+    
+    filterProducts();
+}
+</script>
+
+<%- include('../layout/footer') %>

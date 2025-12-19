@@ -1,0 +1,161 @@
+<%- include('layout/header', { title: 'Laporan Keuangan' }) %>
+
+<div class="py-5" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh;">
+    <div class="container">
+        <!-- Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 no-print">
+            <div>
+                <h2 class="text-white mb-1"><i class="bi bi-graph-up-arrow me-2"></i>Laporan Keuangan</h2>
+                <p class="text-white-50 mb-0">Ringkasan pendapatan dan riwayat transaksi</p>
+            </div>
+            <div class="d-flex gap-2 mt-3 mt-md-0">
+                <a href="/admin/dashboard" class="btn btn-outline-light">
+                    <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                </a>
+                <button onclick="printPage()" class="btn btn-gradient">
+                    <i class="bi bi-printer me-2"></i>Print Laporan
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-4 mb-5">
+            <!-- Pendapatan Hari Ini -->
+            <div class="col-md-4">
+                <div class="card card-glass h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 70px; height: 70px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                                <i class="bi bi-cash-coin text-white display-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-muted mb-1">Pendapatan Hari Ini</p>
+                                <h3 class="fw-bold mb-0" style="color: #11998e;">
+                                    Rp <%= summary.todayRevenue.toLocaleString('id-ID') %>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaksi Hari Ini -->
+            <div class="col-md-4">
+                <div class="card card-glass h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 70px; height: 70px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <i class="bi bi-receipt text-white display-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-muted mb-1">Transaksi Hari Ini</p>
+                                <h3 class="fw-bold mb-0" style="color: #667eea;">
+                                    <%= summary.todayCount %> <small class="fs-6 text-muted">transaksi</small>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Pendapatan All Time -->
+            <div class="col-md-4">
+                <div class="card card-glass h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 70px; height: 70px; background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);">
+                                <i class="bi bi-trophy text-white display-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-muted mb-1">Total Pendapatan</p>
+                                <h3 class="fw-bold mb-0" style="color: #ff6b6b;">
+                                    Rp <%= summary.allTimeRevenue.toLocaleString('id-ID') %>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="card card-glass">
+            <div class="card-header py-3 d-flex flex-wrap justify-content-between align-items-center" 
+                 style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2" style="color: #667eea;"></i>Riwayat Transaksi</h5>
+                
+                <!-- Date Filter -->
+                <form method="GET" action="/admin/report" class="d-flex gap-2 align-items-center mt-2 mt-md-0 no-print">
+                    <input type="date" class="form-control" name="date" value="<%= filterDate || '' %>">
+                    <button type="submit" class="btn btn-gradient btn-sm">
+                        <i class="bi bi-funnel"></i> Filter
+                    </button>
+                    <% if (filterDate) { %>
+                        <a href="/admin/report" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    <% } %>
+                </form>
+            </div>
+            <div class="card-body p-0">
+                <% if (transactions.length === 0) { %>
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox display-1 text-muted"></i>
+                        <p class="text-muted mt-3 mb-0">Belum ada transaksi yang selesai</p>
+                    </div>
+                <% } else { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr style="background: #f8f9fa;">
+                                    <th class="py-3 ps-4">#</th>
+                                    <th class="py-3">Tanggal</th>
+                                    <th class="py-3">Plat Nomor</th>
+                                    <th class="py-3">Customer</th>
+                                    <th class="py-3 text-end">Total</th>
+                                    <th class="py-3 text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% transactions.forEach((trans, index) => { %>
+                                    <tr>
+                                        <td class="ps-4"><%= index + 1 %></td>
+                                        <td><%= new Date(trans.transaction_date).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) %></td>
+                                        <td>
+                                            <span class="badge bg-dark px-2 py-1"><%= trans.police_number %></span>
+                                        </td>
+                                        <td><%= trans.customer_name || 'Customer' %></td>
+                                        <td class="text-end fw-bold">Rp <%= trans.total_amount.toLocaleString('id-ID') %></td>
+                                        <td class="text-center">
+                                            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Paid</span>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                            <tfoot style="background: #f8f9fa;">
+                                <tr>
+                                    <td colspan="4" class="text-end fw-bold py-3">Total:</td>
+                                    <td class="text-end fw-bold py-3 fs-5" style="color: #667eea;">
+                                        Rp <%= transactions.reduce((sum, t) => sum + parseFloat(t.total_amount), 0).toLocaleString('id-ID') %>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- Print Footer (only visible when printing) -->
+        <div class="d-none d-print-block text-center mt-4 pt-4 border-top">
+            <p class="mb-1"><strong>Angin Mamiri - Car Wash & Cafe</strong></p>
+            <p class="text-muted mb-0">Dicetak pada: <%= new Date().toLocaleString('id-ID') %></p>
+        </div>
+    </div>
+</div>
+
+<%- include('layout/footer') %>

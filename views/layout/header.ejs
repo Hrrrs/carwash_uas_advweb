@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'Angin Mamiri' %> - Car Wash & Cafe</title>
+    <meta name="description" content="Angin Mamiri - Layanan Car Wash & Cafe Terbaik">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --dark-bg: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: var(--dark-bg);
+            min-height: 100vh;
+        }
+        
+        .navbar-custom {
+            background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1050;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #667eea !important;
+        }
+        
+        .btn-gradient {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .btn-gradient-success {
+            background: var(--secondary-gradient);
+        }
+        
+        .btn-gradient-success:hover {
+            box-shadow: 0 10px 30px rgba(17, 153, 142, 0.4);
+        }
+        
+        .card-glass {
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Navbar toggler for mobile */
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.3);
+            padding: 0.4rem 0.6rem;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        /* Mobile navbar collapse */
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                background: rgba(26, 26, 46, 0.98);
+                padding: 1rem;
+                border-radius: 12px;
+                margin-top: 0.5rem;
+            }
+            
+            .navbar-nav {
+                align-items: flex-start !important;
+            }
+            
+            .nav-item {
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .nav-item:last-child {
+                border-bottom: none;
+            }
+            
+            .nav-link {
+                padding: 0.75rem 0 !important;
+            }
+            
+            .btn-logout-mobile {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+        }
+        
+        /* Logout button style */
+        .btn-logout {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ff6b6b !important;
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 0.875rem;
+        }
+        
+        .btn-logout:hover {
+            background: rgba(220, 53, 69, 0.4);
+            color: white !important;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top no-print">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-droplet-fill me-2"></i>Angin Mamiri
+            </a>
+            
+            <% if (typeof user !== 'undefined' && user) { %>
+                <!-- Mobile: Show logout button next to toggler -->
+                <div class="d-flex align-items-center d-lg-none">
+                    <span class="text-white-50 me-2 small"><%= user.username %></span>
+                    <a href="/logout" class="btn btn-logout btn-sm me-2">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            <% } else { %>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            <% } %>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="bi bi-house-fill me-1"></i> Beranda</a>
+                    </li>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <% if (user.role === 'admin') { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin/dashboard"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/products"><i class="bi bi-box-seam me-1"></i> Produk</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin/report"><i class="bi bi-graph-up me-1"></i> Laporan</a>
+                            </li>
+                        <% } else { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/order"><i class="bi bi-cart3 me-1"></i> Pesan</a>
+                            </li>
+                        <% } %>
+                        <!-- Desktop: Show user info and logout -->
+                        <li class="nav-item d-none d-lg-flex align-items-center ms-2">
+                            <span class="text-white-50 me-2"><i class="bi bi-person-circle me-1"></i> <%= user.username %></span>
+                            <a href="/logout" class="btn btn-logout">
+                                <i class="bi bi-box-arrow-right me-1"></i>Logout
+                            </a>
+                        </li>
+                        <!-- Mobile: Show logout in menu -->
+                        <li class="nav-item d-lg-none">
+                            <a class="nav-link text-danger" href="/logout">
+                                <i class="bi bi-box-arrow-right me-1"></i> Logout
+                            </a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-gradient btn-sm" href="/signup"><i class="bi bi-person-plus me-1"></i> Daftar</a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+

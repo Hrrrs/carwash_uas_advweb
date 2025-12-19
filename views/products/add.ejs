@@ -1,0 +1,75 @@
+<%- include('../layout/header', { title: 'Tambah Produk' }) %>
+
+<div class="py-5" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <!-- Back Button -->
+                <a href="/products" class="btn btn-outline-light mb-4">
+                    <i class="bi bi-arrow-left me-2"></i>Kembali
+                </a>
+
+                <div class="card card-glass p-4">
+                    <div class="text-center mb-4">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" 
+                             style="width: 70px; height: 70px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <i class="bi bi-plus-lg text-white" style="font-size: 2rem;"></i>
+                        </div>
+                        <h3 class="fw-bold mb-1">Tambah Produk Baru</h3>
+                        <p class="text-muted">Isi form berikut untuk menambah produk</p>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <% if (error) { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i><%= error %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <% } %>
+
+                    <form action="/products/add" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-medium"><i class="bi bi-tag me-1"></i> Nama Produk</label>
+                            <input type="text" class="form-control form-control-lg" name="name" 
+                                   placeholder="Contoh: Cuci Motor / Nasi Goreng" required
+                                   style="border-radius: 12px;">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium"><i class="bi bi-collection me-1"></i> Kategori</label>
+                            <select class="form-select form-select-lg" name="category" required style="border-radius: 12px;">
+                                <option value="">-- Pilih Kategori --</option>
+                                <option value="service">🚗 Jasa Cuci (Service)</option>
+                                <option value="food">🍔 Makanan (Food)</option>
+                                <option value="beverage">🥤 Minuman (Beverage)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium"><i class="bi bi-currency-dollar me-1"></i> Harga</label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="border-radius: 12px 0 0 12px;">Rp</span>
+                                <input type="number" class="form-control form-control-lg" name="price" 
+                                       placeholder="0" min="0" step="500" required
+                                       style="border-radius: 0 12px 12px 0;">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-medium"><i class="bi bi-chat-text me-1"></i> Deskripsi (Opsional)</label>
+                            <textarea class="form-control" name="description" rows="3" 
+                                      placeholder="Deskripsi singkat produk..."
+                                      style="border-radius: 12px;"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-gradient w-100 btn-lg">
+                            <i class="bi bi-check-lg me-2"></i>Simpan Produk
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layout/footer') %>

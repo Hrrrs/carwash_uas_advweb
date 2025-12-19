@@ -1,0 +1,136 @@
+<%- include('layout/header', { title: 'Beranda' }) %>
+
+<!-- Hero Section -->
+<section class="py-5" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 80vh;">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6 text-white mb-5 mb-lg-0">
+                <span class="badge rounded-pill px-3 py-2 mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <i class="bi bi-star-fill me-1"></i> #1 Car Wash & Cafe di Graha buatan atmin
+                </span>
+                <h1 class="display-3 fw-bold mb-4">
+                    <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Angin Mamiri</span>
+                    <br>Car Wash & Cafe
+                </h1>
+                <p class="lead mb-4 text-white-50">
+                    Nikmati pengalaman cuci mobil premium sambil bersantai di cafe kami. 
+                    Pesan makanan & minuman, kami yang cuci mobilnya!
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <% if (user.role === 'admin') { %>
+                            <a href="/admin/dashboard" class="btn btn-gradient btn-lg px-4">
+                                <i class="bi bi-speedometer2 me-2"></i>Dashboard Admin
+                            </a>
+                        <% } else { %>
+                            <a href="/order" class="btn btn-gradient btn-lg px-4">
+                                <i class="bi bi-cart3 me-2"></i>Pesan Sekarang
+                            </a>
+                        <% } %>
+                    <% } else { %>
+                        <a href="/signup" class="btn btn-gradient btn-lg px-4">
+                            <i class="bi bi-person-plus me-2"></i>Daftar Gratis
+                        </a>
+                        <a href="/login" class="btn btn-outline-light btn-lg px-4">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Masuk
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="position-relative">
+                    <!-- Decorative Cards -->
+                    <div class="card card-glass p-4 position-relative" style="transform: rotate(-3deg);">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="text-center p-3 rounded-3" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+                                    <i class="bi bi-car-front-fill display-4" style="color: #667eea;"></i>
+                                    <h6 class="mt-2 mb-0 fw-bold">Car Wash</h6>
+                                    <small class="text-muted">Premium Service</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center p-3 rounded-3" style="background: linear-gradient(135deg, rgba(17, 153, 142, 0.1) 0%, rgba(56, 239, 125, 0.1) 100%);">
+                                    <i class="bi bi-cup-hot-fill display-4" style="color: #11998e;"></i>
+                                    <h6 class="mt-2 mb-0 fw-bold">Cafe</h6>
+                                    <small class="text-muted">Food & Beverages</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center p-3 rounded-3" style="background: linear-gradient(135deg, rgba(255, 154, 158, 0.1) 0%, rgba(250, 208, 196, 0.1) 100%);">
+                                    <i class="bi bi-clock-fill display-4" style="color: #ff9a9e;"></i>
+                                    <h6 class="mt-2 mb-0 fw-bold">Cepat</h6>
+                                    <small class="text-muted">30 Menit Selesai</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center p-3 rounded-3" style="background: linear-gradient(135deg, rgba(168, 237, 234, 0.1) 0%, rgba(254, 214, 227, 0.1) 100%);">
+                                    <i class="bi bi-shield-check display-4" style="color: #a8edea;"></i>
+                                    <h6 class="mt-2 mb-0 fw-bold">Terpercaya</h6>
+                                    <small class="text-muted">5+ Tahun</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5" style="background: #16213e;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-white">Kenapa Memilih Kami?</h2>
+            <p class="lead text-white-50">Layanan terbaik untuk kendaraan dan kenyamanan Anda</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card card-glass h-100 p-4 text-center">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3" 
+                         style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="bi bi-droplet-half text-white display-5"></i>
+                    </div>
+                    <h4 class="fw-bold">Cuci Premium</h4>
+                    <p class="text-muted mb-0">Menggunakan produk premium berkualitas tinggi untuk hasil yang bersih dan mengkilap.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-glass h-100 p-4 text-center">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3" 
+                         style="width: 80px; height: 80px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                        <i class="bi bi-basket-fill text-white display-5"></i>
+                    </div>
+                    <h4 class="fw-bold">Cafe Nyaman</h4>
+                    <p class="text-muted mb-0">Nikmati berbagai menu makanan dan minuman segar sambil menunggu mobil Anda.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-glass h-100 p-4 text-center">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3" 
+                         style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);">
+                        <i class="bi bi-phone-fill text-white display-5"></i>
+                    </div>
+                    <h4 class="fw-bold">Pesan Online</h4>
+                    <p class="text-muted mb-0">Pesan makanan langsung dari smartphone Anda, praktis dan cepat!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 text-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container">
+        <h2 class="display-5 fw-bold text-white mb-3">Siap Untuk Mulai?</h2>
+        <p class="lead text-white-50 mb-4">Daftar sekarang dan nikmati layanan terbaik kami!</p>
+        <% if (typeof user === 'undefined' || !user) { %>
+            <a href="/signup" class="btn btn-light btn-lg px-5 fw-bold">
+                <i class="bi bi-rocket-takeoff me-2"></i>Daftar Sekarang
+            </a>
+        <% } %>
+    </div>
+</section>
+
+<%- include('layout/footer') %>
