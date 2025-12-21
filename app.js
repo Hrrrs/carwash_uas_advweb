@@ -53,8 +53,15 @@ app.use((err, req, res, next) => {
     res.status(500).send('Terjadi kesalahan pada server!');
 });
 
-// Start Server
+// Start Server (for local development)
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server berjalan di http://localhost:${PORT}`);
-});
+
+// Only start server if not in Vercel
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server berjalan di http://localhost:${PORT}`);
+    });
+}
+
+// Export for Vercel
+module.exports = app;
